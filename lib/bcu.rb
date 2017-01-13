@@ -22,6 +22,10 @@ module Bcu
         options.dry_run = true
       end
 
+      opts.on("--update", "Update Homebrew, taps, and formulae before checking outdated casks") do
+        options.update = true
+      end
+
       # `-h` is not available since the Homebrew hijacks it.
       opts.on_tail("--h", "Show this message") do
         puts opts
@@ -35,11 +39,8 @@ module Bcu
 
   def self.process(args)
     options = parse(args)
-    begin
-      Hbc::CLI::Update.run
-    rescue SystemExit
-      $stdout
-    end
+
+    update if options.update
 
     options.cask = get_cask(args[0]) unless args[0].nil?
 
@@ -78,5 +79,12 @@ module Bcu
       latest: cask.version.to_s,
       installed: Hbc.installed_versions(cask.to_s),
     }
+  end
+
+  def self.update
+    result = Hbc::SystemCommand.run(HOMEBREW_BREW_FILE, args: ["update"], print_stderr: true, print_stdout: false)
+    # This is brittle but will only need to change if
+    # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/cmd/update.sh#L579 changes
+    ohai "Updated formulae" if result.success? && result.to_s.chomp != "Already up-to-date."
   end
 end
