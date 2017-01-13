@@ -22,6 +22,10 @@ module Bcu
         options.dry_run = true
       end
 
+      opts.on("--update", "Update Homebrew, taps, and formulae before checking outdated casks") do
+        options.update = true
+      end
+
       opts.on("--cask [CASK]", "Specify a single cask for upgrade") do |cask_name|
         Hbc.each_installed(true) do |app|
           options.cask = app if cask_name == app[:name]
@@ -47,7 +51,7 @@ module Bcu
   def self.process(args)
     options = parse(args)
 
-    update
+    update if options.update
 
     Hbc.outdated(options).each do |app|
       next if options.dry_run
