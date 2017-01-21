@@ -41,8 +41,8 @@ module Bcu
     options = parse(args)
 
     update if options.update
-
-    options.cask = get_cask(args[0]) unless args[0].nil?
+    # parse() has removed all flags from args
+    options.casks = args.map { |a| get_cask(a) }
 
     Hbc.outdated(options).each do |app|
       next if options.dry_run
@@ -69,7 +69,7 @@ module Bcu
 
     if cask.nil?
       onoe "#{Tty.red}Cask \"#{cask_name}\" is not installed.#{Tty.reset}"
-      exit(1)
+      return nil
     end
 
     {

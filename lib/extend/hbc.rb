@@ -11,10 +11,12 @@ module Hbc
       counter = "(%0#{zero_pad}d/%d)"
       string_template = "#{app[:full_name]} (#{app[:name]}): "
 
-      if options.cask
-        next unless options.cask[:name] == app[:name]
-      else
+      # If casks are specified, only install those
+      if options.casks.empty?
         string_template = "#{counter} #{string_template}"
+      else
+        next if options.casks.compact.empty?
+        next if options.casks.compact.select { |c| c[:name] == app[:name] }.empty?
       end
 
 
