@@ -3,6 +3,7 @@ $LOAD_PATH.unshift("#{HOMEBREW_REPOSITORY}/Library/Homebrew/cask/lib")
 require "hbc"
 require "extend/hbc"
 require "bcu/options"
+require "bcu/cask"
 
 module Bcu
   def self.process(args)
