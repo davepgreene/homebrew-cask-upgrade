@@ -10,44 +10,59 @@ module Bcu
     parse!(args)
 
     update if options.update
-    # parse() has removed all flags from args
-    options.casks = args.map { |a| get_cask(a) }
 
-    Hbc.outdated(options).each do |app|
-      next if options.dry_run
+    outdated, state = find_outdated_apps
+    options.formatter.write(state)
 
-      ohai "Upgrading #{app[:name]} to #{app[:latest]}"
+    return if outdated.empty? || options.dry_run
+
+    # Begin upgrading
+    outdated.each do |app|
+      ohai "Upgrading #{app.name} to #{app.latest}"
 
       # Clean up the cask metadata container.
-      system "rm -rf #{app[:cask].metadata_master_container_path}"
+      system "rm -rf #{app.cask.metadata_master_container_path}"
 
       # Force to install the latest version.
-      system "brew cask install #{app[:name]} --force"
+      system "brew cask install #{app.token} --force"
 
       # Remove the old versions.
-      app[:installed].each do |version|
+      app.installed.each do |version|
         unless version == "latest"
-          system "rm -rf #{CASKROOM}/#{app[:name]}/#{version}"
+          system "rm -rf #{CASKROOM}/#{app.token}/#{version}"
         end
       end
     end
   end
 
-  def self.get_cask(cask_name)
-    cask = Hbc.get_installed_cask(cask_name)
+  def self.find_outdated_apps
+    installed = if options.casks.empty?
+                  Hbc.installed_apps
+                else
+                  options.casks
+                end
 
-    if cask.nil?
-      onoe "#{Tty.red}Cask \"#{cask_name}\" is not installed.#{Tty.reset}"
-      return nil
+    outdated = []
+    state = {}
+
+    installed.map { |a| Cask.new(a) }.select(&:installed?).each do |app|
+      if options.all && (app.latest == "latest")
+        status = "#{Tty.red}latest but forced to upgrade#{Tty.reset}"
+        outdated.push(app)
+      elsif app.installed.include?(app.latest)
+        status = "#{Tty.green}up to date#{Tty.reset}"
+      else
+        status = "#{Tty.red}#{app.installed.join(", ")}#{Tty.reset} -> #{Tty.green}#{app.latest}#{Tty.reset}"
+        outdated.push(app)
+      end
+
+      state[app.name] = {
+        :status => status,
+        :cask => app
+      }
     end
 
-    {
-      cask: cask,
-      name: cask.to_s,
-      full_name: cask.name.first,
-      latest: cask.version.to_s,
-      installed: Hbc.installed_versions(cask.to_s),
-    }
+    [outdated, state]
   end
 
   def self.update
