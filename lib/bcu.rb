@@ -2,43 +2,11 @@ $LOAD_PATH.unshift("#{HOMEBREW_REPOSITORY}/Library/Homebrew/cask/lib")
 
 require "hbc"
 require "extend/hbc"
-require "optparse"
-require "ostruct"
+require "bcu/options"
 
 module Bcu
-  def self.parse(args)
-    options = OpenStruct.new
-    options.all = false
-    options.cask = nil
-
-    parser = OptionParser.new do |opts|
-      opts.banner = "Usage: brew cu [CASK] [options]"
-
-      opts.on("-a", "--all", "Force upgrade outdated apps including the ones marked as latest") do
-        options.all = true
-      end
-
-      opts.on("--dry-run", "Print outdated apps without upgrading them") do
-        options.dry_run = true
-      end
-
-      opts.on("--update", "Update Homebrew, taps, and formulae before checking outdated casks") do
-        options.update = true
-      end
-
-      # `-h` is not available since the Homebrew hijacks it.
-      opts.on_tail("--h", "Show this message") do
-        puts opts
-        exit
-      end
-    end
-
-    parser.parse!(args)
-    options
-  end
-
   def self.process(args)
-    options = parse(args)
+    parse!(args)
 
     update if options.update
     # parse() has removed all flags from args
