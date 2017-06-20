@@ -11,7 +11,7 @@ With `brew-cask-upgrade`, you just need to type one command to upgrade all the a
 ## Installation
 
 ```
-brew tap buo/cask-upgrade
+brew tap davepgreene/cask-upgrade
 ```
 
 ## Usage
@@ -37,10 +37,11 @@ brew cu [CASK]
 Options:
 
 ```
-Usage: brew cu [options]
-    -a, --all      Force upgrade outdated apps including the ones marked as latest
-        --dry-run  Print outdated apps without upgrading them
-        --h        Show this message
+Usage: brew cu [CASK] [options]
+    -a, --all                        Force upgrade outdated apps including the ones marked as latest
+    -c, --cleanup                    Cleans up cached downloads and tracker symlinks after updating
+    -f, --force                      Include apps that are marked as latest (i.e. force-reinstall them)
+        --dry-run                    Print outdated apps without upgrading them
+        --format FORMAT              Choose how the printed output is formatted: [table, vertical (default)]
+        --update                     Update Homebrew, taps, and formulae before checking outdated casks
 ```
-
-[![asciicast](https://asciinema.org/a/2xvi9l8rsps3troigke6b51qf.png)](https://asciinema.org/a/2xvi9l8rsps3troigke6b51qf)

@@ -5,7 +5,7 @@
 - run `brew update` (twice).
 - run `brew doctor` and fix all the warnings.
 - run `brew cu`.
-- [create an issue](https://github.com/buo/homebrew-cask-upgrade/issues/new) if your problem still persists.
+- [create an issue](https://github.com/davepgreene/homebrew-cask-upgrade/issues/new) if your problem still persists.
 
 ## Propose a new feature
 

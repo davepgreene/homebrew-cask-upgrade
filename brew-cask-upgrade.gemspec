@@ -3,10 +3,10 @@ Gem::Specification.new do |s|
   s.version     = "2.0.1"
   s.summary     = "A command line tool for Homebrew Cask"
   s.description = "A command line tool for upgrading every outdated app installed by Homebrew Cask"
-  s.authors     = ["buo"]
-  s.email       = "buo@users.noreply.github.com"
+  s.authors     = ["davepgreene"]
+  s.email       = "davepgreene@users.noreply.github.com"
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  s.homepage    = "https://github.com/buo/homebrew-cask-upgrade"
+  s.homepage    = "https://github.com/davepgreene/homebrew-cask-upgrade"
   s.license     = "MIT"
 
   s.bindir      = "bin"
