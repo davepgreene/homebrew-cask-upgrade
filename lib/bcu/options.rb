@@ -37,7 +37,7 @@ module Bcu
         options.dry_run = true
       end
 
-      opts.on("--format", "Choose how the printed output is formatted: [table, vertical (default)]") do |format|
+      opts.on("--format FORMAT", "Choose how the printed output is formatted: [table, vertical (default)]") do |format|
         options.formatter = case format.downcase
                             when 'table'
                               TableFormatter.new
