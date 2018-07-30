@@ -66,7 +66,7 @@ module Bcu
   end
 
   def self.update
-    result = Hbc::SystemCommand.run(HOMEBREW_BREW_FILE, args: ["update"], print_stderr: true, print_stdout: false)
+    result = SystemCommand.run(HOMEBREW_BREW_FILE, args: ["update"], print_stderr: true, print_stdout: false)
     # This is brittle but will only need to change if
     # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/cmd/update.sh#L579 changes
     ohai "Updated formulae" if result.success? && result.to_s.chomp != "Already up-to-date."
