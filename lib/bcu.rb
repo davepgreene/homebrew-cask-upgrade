@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift("#{HOMEBREW_REPOSITORY}/Library/Homebrew/cask/lib")
 
-require "hbc"
+require "cask/all"
 require "extend/hbc"
 require "bcu/options"
 require "bcu/cask"
@@ -37,7 +37,7 @@ module Bcu
 
   def self.find_outdated_apps
     installed = if options.casks.empty?
-                  Hbc.installed_apps
+                  ::Cask.installed_apps
                 else
                   options.casks
                 end

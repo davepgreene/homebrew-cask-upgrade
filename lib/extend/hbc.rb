@@ -1,11 +1,13 @@
-CASKROOM = Hbc::Caskroom.path
+require "cask/cask_loader"
 
-module Hbc
+CASKROOM = ::Cask::Caskroom.path
+
+module Cask
   def self.load_cask(name)
     begin
       cask = CaskLoader.load(name)
     rescue NoMethodError
-      cask = Hbc.load(name)
+      cask = Cask.load(name)
     end
     cask
   end

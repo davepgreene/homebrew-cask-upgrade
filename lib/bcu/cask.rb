@@ -1,12 +1,12 @@
 require "ostruct"
-require "hbc"
+require "cask/all"
 
 module Bcu
   class Cask
     def initialize(cask)
       begin
-        @cask = Hbc.load_cask(cask)
-      rescue Hbc::CaskUnavailableError
+        @cask = ::Cask.load_cask(cask)
+      rescue ::Cask::CaskUnavailableError
         onoe "#{Tty.red}Cask \"#{cask}\" is not installed.#{Tty.reset}"
 
         @cask = OpenStruct.new
@@ -39,7 +39,7 @@ module Bcu
     end
 
     def outdated?
-      cask.instance_of?(Hbc::Cask) && !versions.include?(version)
+      cask.instance_of?(::Cask::Cask) && !versions.include?(version)
     end
 
     def auto_updates
@@ -57,7 +57,7 @@ module Bcu
     private
 
     def versions
-      @versions ||= Hbc.installed_versions(token)
+      @versions ||= ::Cask.installed_versions(token)
     end
   end
 end
